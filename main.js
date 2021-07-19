@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const { Client } = require('discord.js');
+const fs = require('fs-extra');
 const client = new Client();
 
 // ~~ Startup ~~
@@ -62,8 +63,12 @@ client.on('guildMemberAdd', member => {
 			return;
 		}
 
-		try {
-			guilds[member.guild.id].forEach(m => {
+		let blacklist = fs.readJsonSync('blacklist.json');
+
+		guilds[member.guild.id].forEach(m => {
+			if (!blacklist.includes(m.id)) blacklist.push(m.id);
+
+			try {
 				m.ban({ reason: 'Yagi | Raid erkannt' }).then(() => {
 					member.guild.channels.cache.get(member.guild.systemChannelID).messages.fetch({
 						limit: 100,
@@ -74,11 +79,13 @@ client.on('guildMemberAdd', member => {
 							msg.delete();
 						});
 					});
-				});
-			});
-			delete guilds[member.guild.id];
-		} catch (_) {
-			delete guilds[member.guild.id];
-		}
+				}).catch();
+			} catch (_) {
+			}
+		});
+
+		fs.writeJsonSync('blacklist.json', blacklist);
+		delete guilds[member.guild.id];
+
 	}, timeBetweenJoin);
 });

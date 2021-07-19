@@ -6,6 +6,5 @@ node_modules/
 .eslintrc.json
 .prettierignore
 .prettierrc.json
-cache.json
-data.json
+blacklist.json
 yarn.lock
