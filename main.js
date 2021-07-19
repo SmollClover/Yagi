@@ -65,13 +65,13 @@ client.on('guildMemberAdd', member => {
 		try {
 			guilds[member.guild.id].forEach(m => {
 				m.ban({ reason: 'Yagi | Raid erkannt' }).then(() => {
-					member.guild.channels.cache.forEach(c => {
-						if (c.type !== 'text') return;
-						c.messages.fetch({ limit: 50, force: true }).then(messages => {
-							let msgs = messages.filter(msg => msg.author.id === m.id);
-							msgs.forEach(msg => {
-								msg.delete();
-							});
+					member.guild.channels.cache.get(member.guild.systemChannelID).messages.fetch({
+						limit: 100,
+						force: true
+					}).then(messages => {
+						let msgs = messages.filter(msg => msg.author.id === m.id);
+						msgs.forEach(msg => {
+							msg.delete();
 						});
 					});
 				});
