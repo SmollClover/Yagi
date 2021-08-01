@@ -7,4 +7,3 @@ node_modules/
 .prettierignore
 .prettierrc.json
 blacklist.json
-yarn.lock
