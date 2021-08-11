@@ -4,12 +4,12 @@
   "main": "main.js",
   "license": "MIT",
   "devDependencies": {
-    "eslint": "^7.31.0",
+    "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "prettier": "^2.3.2"
   },
   "dependencies": {
-    "discord.js": "^12.5.3",
+    "discord.js": "^13.0.1",
     "dotenv": "^10.0.0",
     "fs-extra": "^10.0.0"
   }

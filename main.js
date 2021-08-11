@@ -1,8 +1,15 @@
 require('dotenv').config();
 
-const { Client } = require('discord.js');
+const { Client, Intents } = require('discord.js');
 const fs = require('fs-extra');
-const client = new Client();
+const client = new Client({
+	intents: [
+		Intents.FLAGS.GUILDS,
+		Intents.FLAGS.GUILD_MEMBERS,
+		Intents.FLAGS.GUILD_BANS,
+		Intents.FLAGS.GUILD_MESSAGES
+	]
+});
 
 // ~~ Startup ~~
 client.login(process.env.TOKEN).then();
@@ -46,12 +53,13 @@ client.once('ready', () => {
 client.on('guildMemberAdd', member => {
 	try {
 		guilds[member.guild.id].size;
-	} catch (_) {
+	} catch {
 		guilds[member.guild.id] = new Set();
 	}
 
 	guilds[member.guild.id].add(member);
 	lastSize[member.id] = guilds[member.guild.id].size;
+
 	setTimeout(() => {
 		if (guilds[member.guild.id].size !== lastSize[member.id]) {
 			delete lastSize[member.id];
@@ -70,17 +78,18 @@ client.on('guildMemberAdd', member => {
 
 			try {
 				m.ban({ reason: 'Yagi | Raid erkannt' }).then(() => {
-					member.guild.channels.cache.get(member.guild.systemChannelID).messages.fetch({
-						limit: 100,
-						force: true
-					}).then(messages => {
-						let msgs = messages.filter(msg => msg.author.id === m.id);
-						msgs.forEach(msg => {
-							msg.delete();
-						});
-					});
+					try {
+						member.guild.systemChannel.messages.fetch({
+							limit: 100,
+							force: true,
+							cache: true
+						}).then(messages => {
+							member.guild.systemChannel.bulkDelete(messages.filter(msg => msg.author.id === m.id));
+						}).catch();
+					} catch {
+					}
 				}).catch();
-			} catch (_) {
+			} catch {
 			}
 		});
 

@@ -1,7 +1,5 @@
 node_modules/
 .idea/
-.dccache
-.dcignore
 .env
 .eslintrc.json
 .prettierignore
