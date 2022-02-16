@@ -11,9 +11,8 @@ The Logic is not designed to be really indepth with checking a Users messages an
 ---
 
 ### Setup
- - Create a file called `blacklist.json`
-   - This will log the IDs of the banned Users
- - Create a file called `.env` and add your Bot Token to it
-   - TOKEN=SampleToken
- - Invite the Bot to your Discord Server
- - Start with `node main.js`
+
+-   Create a file called `.env` and add your Bot Token to it
+    -   TOKEN=SampleToken
+-   Invite the Bot to your Discord Server
+-   Start with `node main.js`

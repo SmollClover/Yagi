@@ -1,14 +1,13 @@
 require('dotenv').config();
 
 const { Client, Intents } = require('discord.js');
-const fs = require('fs-extra');
 const client = new Client({
 	intents: [
 		Intents.FLAGS.GUILDS,
 		Intents.FLAGS.GUILD_MEMBERS,
 		Intents.FLAGS.GUILD_BANS,
-		Intents.FLAGS.GUILD_MESSAGES
-	]
+		Intents.FLAGS.GUILD_MESSAGES,
+	],
 });
 
 // ~~ Startup ~~
@@ -22,15 +21,14 @@ try {
 	for (let i = 0; i < process.stdout.getWindowSize()[1]; i++) {
 		console.log('\r\n');
 	}
-} catch (_) {
-}
+} catch (_) {}
 
 // ~~ Client Events ~~
-client.on('error', err => {
+client.on('error', (err) => {
 	console.log(err);
 });
 
-client.on('warn', info => {
+client.on('warn', (info) => {
 	console.log(info);
 });
 
@@ -42,15 +40,11 @@ client.on('reconnecting', () => {
 	console.log('Reconnecting to Websocket');
 });
 
-client.on('rateLimit', info => {
-	if (!process.env.PROD) console.log('RateLimit: ' + info.timeout + ' ' + info.path + ' ' + info.limit);
-});
-
 client.once('ready', () => {
 	console.log('Finished Booting');
 });
 
-client.on('guildMemberAdd', member => {
+client.on('guildMemberAdd', (member) => {
 	try {
 		guilds[member.guild.id].size;
 	} catch {
@@ -66,35 +60,36 @@ client.on('guildMemberAdd', member => {
 			return;
 		}
 		delete lastSize[member.id];
-		if (guilds[member.guild.id].size <= (amountOfMembersToJoin - 1)) {
+		if (guilds[member.guild.id].size <= amountOfMembersToJoin - 1) {
 			delete guilds[member.guild.id];
 			return;
 		}
 
-		let blacklist = fs.readJsonSync('blacklist.json');
-
-		guilds[member.guild.id].forEach(m => {
-			if (!blacklist.includes(m.id)) blacklist.push(m.id);
-
+		guilds[member.guild.id].forEach((m) => {
 			try {
-				m.ban({ reason: 'Yagi | Raid erkannt' }).then(() => {
-					try {
-						member.guild.systemChannel.messages.fetch({
-							limit: 100,
-							force: true,
-							cache: true
-						}).then(messages => {
-							member.guild.systemChannel.bulkDelete(messages.filter(msg => msg.author.id === m.id));
-						}).catch();
-					} catch {
-					}
-				}).catch();
-			} catch {
-			}
+				m.ban({ reason: 'Yagi | Raid erkannt' })
+					.then(() => {
+						try {
+							member.guild.systemChannel.messages
+								.fetch({
+									limit: 100,
+									force: true,
+									cache: true,
+								})
+								.then((messages) => {
+									member.guild.systemChannel.bulkDelete(
+										messages.filter(
+											(msg) => msg.author.id === m.id
+										)
+									);
+								})
+								.catch();
+						} catch {}
+					})
+					.catch();
+			} catch {}
 		});
 
-		fs.writeJsonSync('blacklist.json', blacklist);
 		delete guilds[member.guild.id];
-
 	}, timeBetweenJoin);
 });
