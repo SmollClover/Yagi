@@ -15,4 +15,5 @@ The Logic is not designed to be really indepth with checking a Users messages an
 -   Create a file called `.env` and add your Bot Token to it
     -   TOKEN=SampleToken
 -   Invite the Bot to your Discord Server
+-   Install packages `yarn`
 -   Start with `node main.js`
