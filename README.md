@@ -2,6 +2,8 @@
 
 ## An Anti-Raid Bot for Discord Servers with simplistic logic
 
+> This Bot was designed for personal use. There's no guarantee for it to be stable when used by someone else and I will not provide any Support for running/using this Project
+
 ---
 
 This Bot is designed to be really simple. So simple infact, that it should be a good starting point to get an idea on how to detect a Raid on a Discord Server.
